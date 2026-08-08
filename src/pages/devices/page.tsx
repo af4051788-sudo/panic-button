@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { Authenticated } from "convex/react";
 import { api } from "@/convex/_generated/api.js";
 import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import QRCode from "qrcode";
 import { Button } from "@/components/ui/button.tsx";
@@ -373,7 +373,12 @@ function DeviceTargetChecklist({
             className="size-4 accent-primary"
           />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">{d.name}</p>
+            <p className="text-sm font-medium text-foreground truncate flex items-center gap-1.5">
+              <span className="truncate">{d.name}</span>
+              {d.deviceType !== "community" && (
+                <span className="flex-shrink-0 text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">Milik Anda</span>
+              )}
+            </p>
             <p className="text-[10px] text-muted-foreground">
               {d.deviceType === "community" ? `Komunal${d.groupName ? " · " + d.groupName : ""}` : "Pribadi"}
             </p>
@@ -387,15 +392,25 @@ function DeviceTargetChecklist({
 
 // ── Fase 5: pengaturan target alarm milik SAYA (dipakai tiap kali panic ditekan) ─
 function AlarmTargetSettings() {
-  const [category, setCategory] = useState<"panic_silent" | "escort">("panic_silent");
+  const [searchParams] = useSearchParams();
+  const deepLinked = searchParams.get("target") === "escort";
+  const [category, setCategory] = useState<"panic_silent" | "escort">(deepLinked ? "escort" : "panic_silent");
   const data = useQuery(api.alarmTargets.getMyAlarmTargets, { category });
   const setTargets = useMutation(api.alarmTargets.setMyAlarmTargets);
   const resetTargets = useMutation(api.alarmTargets.resetMyAlarmTargetsToDefault);
   const [pending, setPending] = useState<string[] | null>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setPending(null);
   }, [category]);
+
+  // Datang dari link "Atur device mana yang ikut aktif/bunyi" di modal Escort
+  // — scroll otomatis ke bagian ini supaya tidak perlu dicari manual.
+  useEffect(() => {
+    if (deepLinked) sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (data === undefined) {
     return <Skeleton className="h-48 w-full rounded-2xl" />;
@@ -429,7 +444,7 @@ function AlarmTargetSettings() {
   };
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-4 space-y-3">
+    <div ref={sectionRef} className="bg-card border border-border rounded-2xl p-4 space-y-3">
       <div>
         <p className="font-bold text-sm text-foreground">Target Alarm</p>
         <p className="text-xs text-muted-foreground">

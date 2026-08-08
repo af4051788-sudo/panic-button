@@ -99,6 +99,7 @@ interface PanicBtnProps {
   onPointerDown: () => void;
   onPointerUp: () => void;
   onClick: () => void;
+  holdSec: number;
 }
 
 const PanicBtn = memo(function PanicBtn({
@@ -112,6 +113,7 @@ const PanicBtn = memo(function PanicBtn({
   onPointerDown,
   onPointerUp,
   onClick,
+  holdSec,
 }: PanicBtnProps) {
   const radius = 126;
   const circumference = 2 * Math.PI * radius;
@@ -310,7 +312,7 @@ const PanicBtn = memo(function PanicBtn({
                 <span className="text-xl font-black tracking-widest text-white" style={{ textShadow: "0 2px 10px rgba(0,0,0,0.7)" }}>
                   PANIC
                 </span>
-                <span className="text-xs text-white/60 font-medium">Tahan 3 detik</span>
+                <span className="text-xs text-white/60 font-medium">Tahan {holdSec} detik</span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -738,7 +740,7 @@ function PanicButtonCore() {
         </div>
         <p className="text-muted-foreground text-xs">Sistem Keamanan Komunitas</p>
         {currentUser?.name && (
-          <p className="text-muted-foreground/60 text-[10px] mt-0.5">{currentUser.name}</p>
+          <p className="text-primary font-semibold text-xs mt-0.5">{currentUser.name}</p>
         )}
       </motion.div>
 
@@ -771,6 +773,7 @@ function PanicButtonCore() {
           onPointerDown={startPress}
           onPointerUp={cancelPress}
           onClick={handleButtonClick}
+          holdSec={currentUser?.panicHoldDurationSec ?? 3}
         />
       </motion.div>
 

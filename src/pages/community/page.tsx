@@ -84,19 +84,15 @@ function RecipientSelector({
   const toggleAll = () => onChange(null);
 
   const toggleMember = (userId: Id<"users">) => {
-    const isAdmin = userId === adminId;
     if (allSelected) {
-      // Switch to custom: select all except this one
+      // Switch to custom: select all except this one. Kalau yang di-uncheck
+      // itu admin, onChange di parent (handleRecipientsChange) yang akan
+      // mendeteksi & menampilkan AdminWarningDialog — bukan diblok di sini.
       const others = members.map((m) => m.userId).filter((id) => id !== userId);
-      if (isAdmin) {
-        // Warn about removing admin
-        return;
-      }
       onChange(others);
     } else {
       const current = value ?? [];
       if (current.includes(userId)) {
-        if (isAdmin) return; // can't deselect admin — handled separately via warning dialog
         onChange(current.filter((id) => id !== userId));
       } else {
         onChange([...current, userId]);
@@ -124,12 +120,11 @@ function RecipientSelector({
           <div key={m.userId} className="flex items-center gap-2">
             <button
               onClick={() => toggleMember(m.userId)}
-              disabled={isAdmin}
-              className={`flex-1 flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors cursor-pointer text-sm ${
+              className={`flex-1 flex items-center justify-between px-4 py-2.5 rounded-xl border transition-colors cursor-pointer text-sm hover:border-primary/30 ${
                 selected
                   ? "border-primary/40 bg-primary/5 text-foreground"
                   : "border-border bg-background text-muted-foreground"
-              } ${isAdmin ? "opacity-60 cursor-not-allowed" : "hover:border-primary/30"}`}
+              }`}
             >
               <span className="flex items-center gap-2">
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${selected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>

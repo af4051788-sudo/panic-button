@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "convex/react";
 import { motion, AnimatePresence } from "motion/react";
-import { Navigation, X } from "lucide-react";
+import { Navigation, X, ChevronRight } from "lucide-react";
 import { api } from "@/convex/_generated/api.js";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ export function EscortQuickButton() {
   const [starting, setStarting] = useState(false);
   const activeAlarm = useQuery(api.alarms.getMyActiveAlarm, {});
   const startEscort = useMutation(api.groups.startEscortMode);
+  const navigate = useNavigate();
 
   // Jangan tampilkan tombol kalau Escort Mode (atau alarm lain) sedang aktif
   // — widget global sudah menangani tampilannya, hindari tombol ganda yang
@@ -72,8 +74,27 @@ export function EscortQuickButton() {
                 </button>
               </div>
               <p className="text-sm text-muted-foreground">
-                Anggota grup kamu akan dipantau otomatis selama perjalanan. Butuh pilih orang tertentu saja? Buka dari halaman Komunitas.
+                Anggota grup kamu akan dipantau otomatis selama perjalanan.
               </p>
+
+              <div className="space-y-1.5">
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); navigate("/community"); }}
+                  className="w-full flex items-center justify-between gap-2 bg-background rounded-xl px-3 py-2 text-left cursor-pointer hover:bg-background/70 transition-colors"
+                >
+                  <span className="text-xs text-muted-foreground">Butuh pilih orang tertentu saja yang memantau?</span>
+                  <ChevronRight className="size-4 text-yellow-400 flex-shrink-0" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); navigate("/devices?target=escort"); }}
+                  className="w-full flex items-center justify-between gap-2 bg-background rounded-xl px-3 py-2 text-left cursor-pointer hover:bg-background/70 transition-colors"
+                >
+                  <span className="text-xs text-muted-foreground">Atur device mana yang ikut aktif/bunyi saat eskalasi?</span>
+                  <ChevronRight className="size-4 text-yellow-400 flex-shrink-0" />
+                </button>
+              </div>
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
