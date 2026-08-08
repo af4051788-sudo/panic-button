@@ -258,16 +258,16 @@ function AdminSetupGate({ children }: { children: React.ReactNode }) {
           <ShieldCheck className="size-8 text-primary" />
         </div>
         <div className="space-y-2">
-          <h2 className="font-bold text-lg text-foreground">Akses Admin Developer Diperlukan</h2>
+          <h2 className="font-bold text-lg text-foreground">Akses Admin Diperlukan</h2>
           <p className="text-sm text-muted-foreground max-w-xs">
-            Akun Anda belum memiliki hak admin developer. Jika Anda adalah pengguna pertama, klik tombol di bawah untuk menjadi admin developer pertama.
+            Akun Anda belum memiliki hak admin. Jika Anda adalah pengguna pertama, klik tombol di bawah untuk menjadi admin pertama.
           </p>
         </div>
         <Button onClick={handleSetFirstAdmin} disabled={loading} className="gap-2">
           <ShieldCheck className="size-4" />
-          {loading ? "Memproses..." : "Jadikan Saya Admin Developer Pertama"}
+          {loading ? "Memproses..." : "Jadikan Saya Admin Pertama"}
         </Button>
-        <p className="text-xs text-muted-foreground">Jika sudah ada admin developer lain, minta mereka untuk mempromosikan akun Anda.</p>
+        <p className="text-xs text-muted-foreground">Jika sudah ada admin lain, minta mereka untuk mempromosikan akun Anda.</p>
       </div>
     );
   }
@@ -311,10 +311,10 @@ function AdminDashboardInner() {
         )}
       </AnimatePresence>
 
-      <div className="flex gap-1 bg-card rounded-xl p-1 border border-border">
+      <div className="flex gap-1 bg-card rounded-xl p-1 border border-border overflow-x-auto">
         {[{ id: "overview", label: "Ringkasan", icon: LayoutDashboard }, { id: "alarms", label: "Log Alarm", icon: List }, { id: "devices", label: "Perangkat", icon: Cpu }, { id: "admins", label: "Kelola Admin", icon: ShieldCheck }].map(({ id, label, icon: Icon }) => (
-          <button key={id} onClick={() => setTab(id as "overview" | "alarms" | "devices" | "admins")} className={`flex-1 min-w-0 flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-lg text-[10px] font-medium transition-colors cursor-pointer ${tab === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-            <Icon className="size-3.5 flex-shrink-0" /><span className="truncate w-full text-center leading-tight">{label}</span>
+          <button key={id} onClick={() => setTab(id as "overview" | "alarms" | "devices" | "admins")} className={`shrink-0 sm:flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${tab === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+            <Icon className="size-3.5" />{label}
           </button>
         ))}
       </div>
@@ -518,7 +518,7 @@ export default function AdminPage() {
           <ArrowLeft className="size-5 text-foreground" />
         </button>
         <div className="flex-1">
-          <h1 className="font-bold text-foreground flex items-center gap-2"><ShieldAlert className="size-4 text-primary" /> Admin Developer</h1>
+          <h1 className="font-bold text-foreground flex items-center gap-2"><ShieldAlert className="size-4 text-primary" /> Admin Dashboard</h1>
           <p className="text-xs text-muted-foreground">Monitoring {"&"} Kontrol Real-time</p>
         </div>
         <button onClick={() => navigate("/admin/smartplug-queue")} className="text-xs text-primary underline cursor-pointer shrink-0">

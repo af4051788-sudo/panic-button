@@ -672,7 +672,7 @@ function GroupDetail({ groupId, onBack }: { groupId: Id<"groups">; onBack: () =>
                       </div>
                     )}
                     {m.role === "admin" && (
-                      <span className="text-xs bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full">Admin</span>
+                      <span className="text-xs bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full">Admin Komunitas</span>
                     )}
                   </div>
                 </div>
@@ -956,7 +956,7 @@ function CommunityInner() {
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-foreground truncate">{group.name}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-2 mt-0.5">
-                      <Users className="size-3" /> {group.memberCount} anggota{group.role === "admin" && <span className="text-primary">· Admin</span>}
+                      <Users className="size-3" /> {group.memberCount} anggota{group.role === "admin" && <span className="text-primary">· Admin Komunitas</span>}
                     </p>
                     {group.muteAlarmSound && (
                       <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><VolumeX className="size-3" /> Suara dimatikan</p>

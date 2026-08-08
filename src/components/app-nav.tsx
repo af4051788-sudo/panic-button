@@ -4,7 +4,7 @@ import { ShieldAlert, Users, LayoutDashboard, BarChart2, User } from "lucide-rea
 const NAV_ITEMS = [
   { path: "/", label: "Panic", icon: ShieldAlert },
   { path: "/community", label: "Komunitas", icon: Users },
-  { path: "/admin", label: "Admin", icon: LayoutDashboard },
+  { path: "/admin", label: "Developer", icon: LayoutDashboard },
   { path: "/analytics", label: "Laporan", icon: BarChart2 },
   { path: "/profile", label: "Profil", icon: User },
 ] as const;

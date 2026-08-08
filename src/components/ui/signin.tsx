@@ -1,6 +1,6 @@
 import { forwardRef, useState, useEffect, useCallback } from "react";
 import { type VariantProps } from "class-variance-authority";
-import { Loader2, LogIn, LogOut } from "lucide-react";
+import { Loader2, LogIn, LogOut, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";
@@ -33,6 +33,7 @@ function AuthModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Tutup modal otomatis saat Convex sudah konfirmasi authenticated
@@ -99,16 +100,28 @@ function AuthModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="auth-password">Password</Label>
-            <Input
-              id="auth-password"
-              type="password"
-              placeholder="Minimal 8 karakter"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              autoComplete={mode === "login" ? "current-password" : "new-password"}
-            />
+            <div className="relative">
+              <Input
+                id="auth-password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Minimal 8 karakter"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <Button type="submit" className="w-full font-bold" disabled={loading}>

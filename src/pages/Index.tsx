@@ -737,6 +737,9 @@ function PanicButtonCore() {
           </h1>
         </div>
         <p className="text-muted-foreground text-xs">Sistem Keamanan Komunitas</p>
+        {currentUser?.name && (
+          <p className="text-muted-foreground/60 text-[10px] mt-0.5">{currentUser.name}</p>
+        )}
       </motion.div>
 
       {/* Status pills */}
