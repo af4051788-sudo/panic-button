@@ -83,6 +83,34 @@ export const leaveGroup = mutation({
   },
 });
 
+// Admin grup mengeluarkan anggota LAIN (bukan dirinya sendiri — untuk itu
+// pakai leaveGroup di atas seperti anggota biasa).
+export const removeMember = mutation({
+  args: { groupId: v.id("groups"), memberUserId: v.id("users") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError({ message: "Not authenticated", code: "UNAUTHENTICATED" });
+
+    if (args.memberUserId === userId) {
+      throw new ConvexError({ message: "Gunakan \"Keluar dari Grup\" untuk mengeluarkan diri sendiri.", code: "BAD_REQUEST" });
+    }
+
+    const myMembership = await ctx.db
+      .query("groupMembers")
+      .withIndex("by_group_and_user", (q) => q.eq("groupId", args.groupId).eq("userId", userId))
+      .unique();
+    if (!myMembership || myMembership.role !== "admin") {
+      throw new ConvexError({ message: "Hanya admin grup yang bisa mengeluarkan anggota.", code: "FORBIDDEN" });
+    }
+
+    const targetMembership = await ctx.db
+      .query("groupMembers")
+      .withIndex("by_group_and_user", (q) => q.eq("groupId", args.groupId).eq("userId", args.memberUserId))
+      .unique();
+    if (targetMembership) await ctx.db.delete(targetMembership._id);
+  },
+});
+
 export const getMyGroups = query({
   args: {},
   handler: async (ctx) => {

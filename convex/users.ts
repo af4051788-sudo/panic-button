@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalQuery } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
@@ -60,5 +60,19 @@ export const updateProfile = mutation({
       escortDurationMinutes: args.escortDurationMinutes ?? user.escortDurationMinutes,
       panicRateLimiterEnabled: args.panicRateLimiterEnabled ?? user.panicRateLimiterEnabled,
     });
+  },
+});
+
+// Fase 10: dipanggil dari convex/whatsappPasswordReset.ts (bukan dari client
+// — makanya internalQuery) buat cari nomor HP mana yang harus dikirimi kode
+// reset, berdasarkan email yang diketik user di form "Lupa Password".
+export const getPhoneForPasswordReset = internalQuery({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", args.email))
+      .unique();
+    return user?.phone ?? null;
   },
 });

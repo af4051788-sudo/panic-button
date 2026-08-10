@@ -31,6 +31,28 @@ http.route({
   }),
 });
 
+// Fase 8: laporan sensor tambahan (pintu/api/air) dari device Wemos-series.
+// Sebelumnya endpoint ini belum ada sama sekali — internal.iot.reportSensorEvent
+// sudah lama tertulis tapi tidak ada satupun jalur HTTP yang memanggilnya,
+// jadi laporan sensor dari firmware manapun tidak pernah benar-benar sampai.
+http.route({
+  path: "/wemos/sensor/report",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const body = await request.json() as { deviceId: string; pairingCode: string; sensorKind: "door" | "fire" | "flood"; triggered: boolean };
+    const result = await ctx.runMutation(internal.iot.reportSensorEvent, {
+      deviceId: body.deviceId,
+      pairingCode: body.pairingCode,
+      sensorKind: body.sensorKind,
+      triggered: body.triggered,
+    });
+    return new Response(JSON.stringify(result), {
+      status: statusFor(result),
+      headers: { "Content-Type": "application/json" },
+    });
+  }),
+});
+
 // Alarm ON
 http.route({
   path: "/wemos/alarm/on",

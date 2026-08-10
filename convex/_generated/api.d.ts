@@ -29,6 +29,7 @@ import type * as smartplug from "../smartplug.js";
 import type * as storageQuota from "../storageQuota.js";
 import type * as tuya from "../tuya.js";
 import type * as users from "../users.js";
+import type * as whatsappPasswordReset from "../whatsappPasswordReset.js";
 
 import type {
   ApiFromModules,
@@ -58,6 +59,7 @@ declare const fullApi: ApiFromModules<{
   storageQuota: typeof storageQuota;
   tuya: typeof tuya;
   users: typeof users;
+  whatsappPasswordReset: typeof whatsappPasswordReset;
 }>;
 
 /**

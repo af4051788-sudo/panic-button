@@ -97,8 +97,11 @@ export function buildEmergencyMessage(params: {
 }
 
 // ── Fonnte sender (plain fetch — no Node built-ins needed, so no "use node") ─
+// Diexport supaya bisa dipakai juga oleh convex/whatsappPasswordReset.ts
+// (Fase: reset password via WhatsApp) — satu jalur pengiriman WA, dipakai
+// ulang untuk 2 keperluan berbeda (kontak darurat & kode reset password).
 
-async function sendViaFonnte(target: string, message: string) {
+export async function sendViaFonnte(target: string, message: string) {
   const token = process.env.FONNTE_TOKEN;
   if (!token) {
     console.warn(
@@ -162,5 +165,15 @@ export const sendEmergencyContactAlert = internalAction({
       });
     }
     return { sent: result.ok, reason: result.ok ? undefined : result.reason };
+  },
+});
+
+// Fase 10: kirim kode reset password lewat WhatsApp — dipanggil dari
+// convex/whatsappPasswordReset.ts (provider reset password custom).
+export const sendPasswordResetCode = internalAction({
+  args: { phone: v.string(), message: v.string() },
+  handler: async (_ctx, args) => {
+    const result = await sendViaFonnte(args.phone, args.message);
+    return { ok: result.ok };
   },
 });

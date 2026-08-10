@@ -10,6 +10,12 @@ export default defineSchema({
     ...authTables.users.validator.fields,
     emergencyContact: v.optional(v.string()),
     emergencyContactName: v.optional(v.string()),
+    // Field "phone" SUDAH ADA dari authTables.users.validator.fields di atas
+    // (bawaan boilerplate @convex-dev/auth, awalnya untuk login-by-phone
+    // yang tidak kita pakai) — dipakai ulang di sini sebagai nomor HP
+    // PEMILIK akun sendiri (beda dari emergencyContact yang nomor orang
+    // lain), untuk fitur reset password via WhatsApp (Fase 10). Opsional,
+    // diisi belakangan di halaman Profil.
     locationPrivacy: v.optional(v.string()),
     role: v.optional(v.string()), // "admin" | "user"
     // Fase 6: bukti otomatis saat panic — WAJIB izin eksplisit (getUserMedia

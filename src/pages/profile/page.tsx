@@ -148,6 +148,7 @@ function ProfileForm() {
             <Phone className="size-4" /> Nomor HP
           </Label>
           <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08123456789" className="bg-card border-border" />
+          <p className="text-[10px] text-muted-foreground">Dipakai untuk kirim kode kalau Anda lupa password (lewat WhatsApp). Kosongkan berarti fitur "Lupa Password" tidak bisa dipakai.</p>
         </div>
 
         <div className="border-t border-border pt-4 space-y-2">

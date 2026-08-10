@@ -1702,8 +1702,13 @@ GND           →  Buzzer-
 D6 (GPIO 12)  →  LED Merah (220Ω)
 D7 (GPIO 13)  →  LED Hijau (220Ω)
 D8 (GPIO 15)  →  LED Kuning (220Ω)
-GND           →  Katoda semua LED`,
-    components: ["1× Wemos D1 Mini (ESP8266)", "1× Tombol tekan (push button)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper"],
+GND           →  Katoda semua LED
+
+Opsional — Sensor tambahan (aktifkan di kode, SENSOR_X_ENABLED = true):
+D1 (GPIO 5)   →  Sensor Pintu (reed switch/magnetic)
+D2 (GPIO 4)   →  Sensor Api (flame sensor)
+D4 (GPIO 2)   →  Sensor Air/Banjir (water sensor)`,
+    components: ["1× Wemos D1 Mini (ESP8266)", "1× Tombol tekan (push button)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper", "(Opsional) Sensor pintu/magnetic reed switch", "(Opsional) Modul sensor api (flame sensor)", "(Opsional) Modul sensor air/banjir (water sensor)"],
   },
   nodemcu: {
     label: "NodeMCU (ESP8266 Devkit)",
@@ -1722,8 +1727,13 @@ GND           →  Buzzer-
 D6 (GPIO 12)  →  LED Merah (220Ω)
 D7 (GPIO 13)  →  LED Hijau (220Ω)
 D8 (GPIO 15)  →  LED Kuning (220Ω)
-GND           →  Katoda semua LED`,
-    components: ["1× NodeMCU (ESP8266 Devkit)", "1× Modul Relay 1 channel (5V, aktif-LOW umumnya)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper", "(Tombol PANIC & LED indikator relay pakai yang sudah bawaan board — tidak perlu beli)"],
+GND           →  Katoda semua LED
+
+Opsional — Sensor tambahan (aktifkan di kode, SENSOR_X_ENABLED = true):
+D2 (GPIO 4)   →  Sensor Pintu (reed switch/magnetic)
+D0 (GPIO 16)  →  Sensor Air/Banjir (PENTING: GPIO16 tidak dukung pull-up internal, wajib pasang resistor pull-up eksternal ~10kΩ ke 3.3V)
+(NodeMCU cuma sisa 2 pin bebas — tidak ada slot untuk sensor Api di board ini)`,
+    components: ["1× NodeMCU (ESP8266 Devkit)", "1× Modul Relay 1 channel (5V, aktif-LOW umumnya)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper", "(Tombol PANIC & LED indikator relay pakai yang sudah bawaan board — tidak perlu beli)", "(Opsional) Sensor pintu/magnetic reed switch", "(Opsional) Modul sensor air/banjir + resistor pull-up eksternal ~10kΩ"],
   },
   esp01: {
     label: "ESP-01 (ESP8266)",
@@ -1735,13 +1745,18 @@ GND           →  Katoda semua LED`,
 ─────────────────────────────────────
 GPIO0         →  Tombol PANIC kaki 1 (INPUT_PULLUP internal)
 GND           →  Tombol PANIC kaki 2 (jangan ditahan saat power-on!)
-GPIO2         →  Modul Relay 1 (pin IN) — LED biru bawaan modul ESP-01S (kalau ada) otomatis ikut nyala/mati di pin ini juga
+GPIO2         →  Modul Relay 1 (pin IN) — SATU-SATUNYA output alarm di versi ini; LED biru bawaan modul ESP-01S (kalau ada) otomatis ikut nyala/mati di pin ini juga
 3.3V / GND    →  Modul Relay 1 (VCC / GND — sesuai spek modul)
-GPIO1 (TX)    →  Buzzer+ piezo (Serial dimatikan di firmware ini, jadi pin ini bebas dipakai)
-GND           →  Buzzer-
-GPIO3 (RX)    →  LED status tunggal + Resistor 220Ω (indikator via pola kedip, lihat komentar di kode)
-GND           →  Katoda LED status`,
-    components: ["1× ESP-01 (ESP8266)", "1× Modul USB-TTL 3.3V (khusus untuk upload firmware)", "1× Catu daya 3.3V terpisah min. 250mA (JANGAN andalkan pin 3.3V USB-TTL)", "1× Modul Relay 1 channel (3.3V/5V, aktif-LOW umumnya)", "1× Tombol tekan (push button)", "1× Buzzer piezo kecil", "1× LED + Resistor 220Ω (status tunggal)", "Breadboard + kabel jumper"],
+
+PENTING: di versi ESP-01 ini, buzzer & LED status TERPISAH TIDAK ADA LAGI
+(4 pin-nya sudah habis buat tombol + relay + 2 slot sensor di bawah) —
+relay di atas jadi satu-satunya output. Kalau tidak pasang sensor apa pun,
+2 pin ini nganggur/boleh dikosongkan:
+
+Opsional — Sensor tambahan (aktifkan di kode, SENSOR_X_ENABLED = true):
+GPIO1 (TX)    →  Sensor Pintu (reed switch/magnetic) — Serial dimatikan di firmware ini, jadi pin ini bebas dipakai
+GPIO3 (RX)    →  Sensor Air/Banjir (water sensor)`,
+    components: ["1× ESP-01 (ESP8266)", "1× Modul USB-TTL 3.3V (khusus untuk upload firmware)", "1× Catu daya 3.3V terpisah min. 250mA (JANGAN andalkan pin 3.3V USB-TTL)", "1× Modul Relay 1 channel (3.3V/5V, aktif-LOW umumnya)", "1× Tombol tekan (push button)", "Breadboard + kabel jumper", "(Opsional) Sensor pintu/magnetic reed switch", "(Opsional) Modul sensor air/banjir"],
   },
   esp32c3: {
     label: "ESP32-C3",
@@ -1760,8 +1775,13 @@ GND           →  Buzzer-
 GPIO6         →  LED Merah (220Ω)
 GPIO7         →  LED Hijau (220Ω)
 GPIO10        →  LED Kuning (220Ω)
-GND           →  Katoda semua LED`,
-    components: ["1× ESP32-C3 Dev Board (DevKitM-1 / SuperMini / sejenis)", "1× Modul Relay 1 channel (aktif-LOW umumnya)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper", "(Tombol PANIC & LED indikator relay pakai yang sudah bawaan board — tidak perlu beli)"],
+GND           →  Katoda semua LED
+
+Opsional — Sensor tambahan (aktifkan di kode, SENSOR_X_ENABLED = true):
+GPIO0         →  Sensor Pintu (reed switch/magnetic)
+GPIO1         →  Sensor Api (flame sensor)
+GPIO3         →  Sensor Air/Banjir (water sensor)`,
+    components: ["1× ESP32-C3 Dev Board (DevKitM-1 / SuperMini / sejenis)", "1× Modul Relay 1 channel (aktif-LOW umumnya)", "1× Buzzer piezo 5V", "1× LED merah, 1× LED hijau, 1× LED kuning", "3× Resistor 220Ω", "Breadboard + kabel jumper", "(Tombol PANIC & LED indikator relay pakai yang sudah bawaan board — tidak perlu beli)", "(Opsional) Sensor pintu/magnetic reed switch", "(Opsional) Modul sensor api (flame sensor)", "(Opsional) Modul sensor air/banjir (water sensor)"],
   },
 };
 

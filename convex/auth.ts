@@ -1,6 +1,7 @@
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import type { DataModel } from "./_generated/dataModel.js";
+import { WhatsAppOTPPasswordReset } from "./whatsappPasswordReset.js";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
@@ -15,6 +16,10 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
           name: params.name as string,
         };
       },
+      // Fase 10: reset password lewat WhatsApp (lihat whatsappPasswordReset.ts)
+      // — bukan email, karena project ini belum punya layanan email pihak
+      // ketiga tapi sudah punya jalur WhatsApp (Fonnte) yang aktif.
+      reset: WhatsAppOTPPasswordReset,
     }),
   ],
 });

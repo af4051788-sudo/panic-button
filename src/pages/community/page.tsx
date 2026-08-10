@@ -41,6 +41,7 @@ import {
   Check,
   QrCode,
   ScanLine,
+  UserMinus,
 } from "lucide-react";
 import type { Id } from "@/convex/_generated/dataModel.d.ts";
 
@@ -470,6 +471,7 @@ function GroupDetail({ groupId, onBack }: { groupId: Id<"groups">; onBack: () =>
   const groups = useQuery(api.groups.getMyGroups, {});
   const broadcasts = useQuery(api.groups.getGroupBroadcasts, { groupId });
   const leaveGroup = useMutation(api.groups.leaveGroup);
+  const removeMember = useMutation(api.groups.removeMember);
   const updateTitle = useMutation(api.groups.updateGroupButtonTitle);
   const [showEscortSetup, setShowEscortSetup] = useState(false);
   const myActiveAlarm = useQuery(api.alarms.getMyActiveAlarm, {});
@@ -509,6 +511,16 @@ function GroupDetail({ groupId, onBack }: { groupId: Id<"groups">; onBack: () =>
       onBack();
     } catch {
       toast.error("Gagal keluar dari grup.");
+    }
+  };
+
+  const handleRemoveMember = async (memberUserId: Id<"users">, name: string) => {
+    if (!confirm(`Keluarkan ${name} dari grup ini?`)) return;
+    try {
+      await removeMember({ groupId, memberUserId });
+      toast.success(`${name} dikeluarkan dari grup.`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Gagal mengeluarkan anggota.");
     }
   };
 
@@ -668,6 +680,15 @@ function GroupDetail({ groupId, onBack }: { groupId: Id<"groups">; onBack: () =>
                     )}
                     {m.role === "admin" && (
                       <span className="text-xs bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full">Admin Komunitas</span>
+                    )}
+                    {isAdmin && m.role !== "admin" && (
+                      <button
+                        onClick={() => handleRemoveMember(m.userId, m.name)}
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                        aria-label={`Keluarkan ${m.name} dari grup`}
+                      >
+                        <UserMinus className="size-4" />
+                      </button>
                     )}
                   </div>
                 </div>
